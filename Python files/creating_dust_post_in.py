@@ -1,9 +1,10 @@
 from creating_load_analysis import create_or_change_load_analysis_dual, create_or_change_load_analysis_single   
 from creating_wake_visualization import create_or_change_wake_visualization
+from creating_flowfield_analysis import *
 import os
 
 
-def create_or_change_dust_post_in(folder_path, start_res, end_res, step_res, file_path_input_trajectory, t_end, single_or_dual):
+def create_or_change_dust_post_in(folder_path, start_res, end_res, step_res, file_path_awebox, t_flowfield_analysis, single_or_dual):
     """
     Creates a dust_post.in file with the necessary analysis blocks for the simulation.
     
@@ -14,9 +15,7 @@ def create_or_change_dust_post_in(folder_path, start_res, end_res, step_res, fil
     output_path = os.path.join(folder_path, "Postprocessing")
     os.makedirs(output_path, exist_ok=True)
 
-    flow_field_resolution = 60  # TODO: integrate this into flow field parameter function
     loads_names = ["loads_first_wing", "loads_second_wing"]
-    ll_data_names = ["sl01", "sl02"]
     components = reference_tags = ["first_wing", "second_wing"]
 
     file_path = f"{folder_path}/dust_post.in"
@@ -29,6 +28,12 @@ data_basename = Output/flapwing
 
     with open(file_path, 'w') as file:
         file.write(first_block)
+
+    
+    min_xyz = calculate_flowfield_parameters_xz(file_path_awebox, t_flowfield_analysis, single_or_dual) [0]
+    max_xyz = calculate_flowfield_parameters_xz(file_path_awebox, t_flowfield_analysis, single_or_dual) [1]
+    n_xyz = calculate_flowfield_parameters_xz(file_path_awebox, t_flowfield_analysis, single_or_dual) [2]
+    create_or_change_flow_field_analysis(folder_path, end_res, end_res, n_xyz, min_xyz, max_xyz, "heatmap_xz" )
 
     create_or_change_wake_visualization(folder_path, start_res, end_res, step_res)
 
