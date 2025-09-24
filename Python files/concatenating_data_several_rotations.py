@@ -33,7 +33,7 @@ def concatenate_data_periodic(n, data):
 
     concatenated_data = data
     if n == 1:
-        return concatenated_data
+        return np.array(concatenated_data)
     else:
         for i in range(1,n):
             concatenated_data = np.concatenate((concatenated_data, data[1:]), axis=0)
@@ -91,7 +91,7 @@ def create_trajectory_and_orientation_files(single_or_dual, n_rot, res, file_pat
 
         euler_angles = [compute_euler_angles(orientation) for orientation in orientations[0]]
 
-        euler_angles_mult_rot = concatenate_data_periodic(n_rot,euler_angles)[::res]
+        euler_angles_mult_rot = (concatenate_data_periodic(n_rot,euler_angles)[::res])
         euler_angles_mult_rot = [np.column_stack([np.unwrap(euler_angles_mult_rot[:, i]) for i in range(3)])]
 
     elif single_or_dual == "dual":  

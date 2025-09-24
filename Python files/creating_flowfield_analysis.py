@@ -74,7 +74,7 @@ def calculate_flowfield_parameters_xz(file_path_awebox, t_end, single_or_dual):
     '''
 
     df = pd.read_csv(file_path_awebox)
-    d = 40 # some 
+    d = 60 # some margin around the trajectory, change if neccesary 
 
     if single_or_dual == "single":
         u_inf_max  = np.max(df["outputs_aerodynamics_u_infty1_0"])

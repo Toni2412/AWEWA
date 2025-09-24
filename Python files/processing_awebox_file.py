@@ -34,8 +34,9 @@ def process_file(file_path, single_or_dual, apply_pitch_correction, CL0, alpha_m
     """ Process the CSV file to extract all relevant data. 
         Applies pitch correction. This is neccesary to exactly match the 3D lift and drag curves of the wings used in awebox and DUST.
     Args:
-        file_path (str): Path to the CSV file. 
-        pitch_correction (bool): Whether to apply pitch correction.
+        file_path (str): Path to the CSV file.
+        single_or_dual (str): "single" for single wing, "dual" for dual wing configuration.
+        apply_pitch_correction (bool): Whether to apply pitch correction.
         CL0 (float): Lift coefficient at zero angle of attack.(deduce from 3D drag curve)
         alpha_max (float): Maximum angle of attack in degrees.(deduce from 3D lift curve)
         alpha_min (float): Minimum angle of attack in degrees.(deduce from 3D lift curve)     
