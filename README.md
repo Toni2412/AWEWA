@@ -88,4 +88,48 @@ Once the input files are prepared, the simulation can be launched by calling the
 
 After completion, two new folders will appear alongside your DUST files: `Output` and `Postprocessing`. The results of interest are stored in the `Postprocessing` folder. By default, the function `create_dust_files` generates post-processing outputs such as wake visualizations and wing load data. The loads over time are saved in `.dat` files, while the wake visualization produces a set of `.vtu` files, which can be opened in ParaView as described earlier. Additional post-processing options will be explained in the following section.
 
+![Visualization of the wake in ParaView.](assets/ParaView.png)
+
+### Additional Postprocessing
+
+#### Velocity in front of kite
+
+When investigating the induced velocity of the wake, it would be ideal to know the velocity at the position of the kite itself. However, due to singularities on the wing, this is not possible. Instead, the velocity can be evaluated at points in front of the kite. The function `velocity_in_front_of_kite` provides this functionality. You can specify a distance (in meters), and for each timestep the function determines a point located that distance in front of the kite, along the direction in which the kite is oriented at that timestep. Then, if you are interested in the induced velocity, you can subtract the freestream velocity.  
+
+
+#### Heatmap in xz plane
+
+If you want to visualize the induced velocity in a certain plane, you can use DUST flowfield analysis in the postprocessing step. The function `create_or_change_flow_field_analysis` creates the respective postprocessing input file that you need for that.  
+
+The first parameter, `folder_path`, specifies the path to the folder where you stored your DUST files. The parameter `start_res` defines the simulation step at which the flow field analysis begins, while `end_res` sets the step at which it ends. The simulation is very costly, so I would recommend not choosing a very wide span, or even just setting both parameters to the same step.  
+
+The parameter `n_xyz` determines the number of points in the `x`, `y`, and `z` directions for the flow field analysis. It must be given in the format `(/1,1,1/)`. Similarly, the parameters `min_xyz` and `max_xyz` specify the minimum and maximum coordinates of the flow field analysis region, respectively, and must also follow the format `(/1,1,1/)`. Finally, the parameter `name` defines the name of the flow field analysis block.  
+
+The function `calculate_flowfield_parameters_xz` can help you calculate the parameters that you need to evaluate the flowfield in the xy plane.  
+
+The first parameter, `file_path_awebox`, specifies the location of the CSV file containing the output data from the awebox simulation. The parameter `timestep` defines the simulation step at which the flow field parameters should be evaluated. The parameter `res` must match the resolution that was used for the simulation. Same goes for the parameter `single_or_dual`. The parameter `y_position` sets the y-coordinate of the xz-plane in which the flow field parameters are to be evaluated; by default, this value is 0.  
+
+The automatically suggested parameters may not always correspond exactly to the frame of interest. Depending on your trajectory, it can therefore be better to define your own parameters and pass them directly to the function `create_or_change_flow_field_analysis`.  
+
+For instructions on how to process and interpret the data generated in this postprocessing step, please refer to the example notebooks.  
+
+![Heatmap in the xz plane for a dual kite system.](assets/heatmap_xz.png)
+
+#### Heatmap in the plane of the kite(s)
+
+If you want to visualize the induced velocity in the plane that is aligned with the kite’s motion, you can use the function `calculate_flowfield_parameters_kite_plane`. It provides the parameters required to perform a flow field analysis in the kite’s plane, similar to how `calculate_flowfield_parameters_xz` does for the xz-plane (see above for general information on flow field analysis setup).  
+
+The parameter `frame_width` defines the size of the flow field analysis region around the kite(s). It determines how far the analysis extends in each direction from the kite’s current position and thus influences the size of the region for which the induced velocity will be evaluated.  
+
+The function returns three results:  
+
+- `min_xyz` and `max_xyz`, which specify the minimum and maximum coordinates of the flow field region in the format `(/x_min, y_min, z_min/)` and `(/x_max, y_max, z_max/)`, respectively, as described in the text above.  
+- `v_normal`, a normalized vector that represents the elevation angle of the kite. This vector is required to determine the component of velocity or force that acts along the tether direction.  
+
+Together, these parameters can then be used to generate the corresponding postprocessing input file via `create_or_change_flow_field_analysis`.  
+
+![Heatmap in the plane of the kites for a dual kite system.](assets/heatmap_kite_plane.png)
+
+
+
 
