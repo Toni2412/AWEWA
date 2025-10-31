@@ -14,7 +14,7 @@ def velocity_in_front_of_kite(n_rot, res, file_path_awebox, folder_path, single_
         n_rot (int): Number of rotations in the trajectory. (has to be either the same as in the dust simulation step or a lower number if you only want to look at the first rotations)
         res (int): Resolution of the trajectory. (has to be either the same as in the dust simulation step or a higher number if you want a less resolved result)
         file_path_awebox (str): Path to the input trajectory file.
-        folder_path (str): Path to the folder where the DUST files are located.
+        folder_path (str): Path to the folder where the DUST files are located. (same as in create_dust_files)
         single_or_dual (str): Whether the trajectory is for a single kite or dual kite system. Options are "single" or "dual".
         apply_pitch_correction (bool): Whether to apply pitch correction to the trajectory.
         CL0 (float): Lift coefficient at 0 angle of attack.
@@ -89,5 +89,15 @@ def velocity_in_front_of_kite(n_rot, res, file_path_awebox, folder_path, single_
 
             ll_results_1.append(np.array(pv.read(point)["velocity"][0]))
         ll_results.append(ll_results_1)
+
+    # --- CLEANUP STEP ---
+    cleanup_block = """
+basename = Postprocessing/post
+data_basename = Output/flapwing
+
+"""
+    with open(file_path, 'w') as file:
+        file.write(cleanup_block)
+    # --------------------
 
     return ll_results, time_mult_rot

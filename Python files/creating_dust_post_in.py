@@ -29,12 +29,6 @@ data_basename = Output/flapwing
     with open(file_path, 'w') as file:
         file.write(first_block)
 
-    
-    min_xyz = calculate_flowfield_parameters_xz(file_path_awebox, t_flowfield_analysis, single_or_dual) [0]
-    max_xyz = calculate_flowfield_parameters_xz(file_path_awebox, t_flowfield_analysis, single_or_dual) [1]
-    n_xyz = calculate_flowfield_parameters_xz(file_path_awebox, t_flowfield_analysis, single_or_dual) [2]
-    create_or_change_flow_field_analysis(folder_path, end_res, end_res, n_xyz, min_xyz, max_xyz, "heatmap_xz" )
-
     create_or_change_wake_visualization(folder_path, start_res, end_res, step_res)
 
     if single_or_dual == "dual":

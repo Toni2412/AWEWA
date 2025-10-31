@@ -2,10 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-
-
-
-def calculate_flowfield_parameters_kite_plane(file_path_awebox):
+def calculate_flowfield_parameters_kite_plane(file_path_awebox, single_or_dual, frame_width):
     """
     Calculate flowfield parameters including v_normal, x_max, x_min, y_max, y_min, z_max, and z_min.
 
@@ -21,17 +18,23 @@ def calculate_flowfield_parameters_kite_plane(file_path_awebox):
     """
     plot_dict = pd.read_csv(file_path_awebox)
 
-    elevation_opt = np.arcsin(np.mean(plot_dict['x_q10_2']) / plot_dict['theta_l_t_0'][0])
+    if single_or_dual == "single":
+        elevation_opt = np.arcsin(np.mean(plot_dict['x_q10_2']) / plot_dict['x_l_t_0'][0])
+        eval_e1 = np.mean(plot_dict['x_q10_0']) 
+        eval_e3 = np.mean(plot_dict['x_q10_2'])
+    elif single_or_dual == "dual":
+        elevation_opt = np.arcsin(np.mean(plot_dict['x_q10_2']) / plot_dict['theta_l_t_0'][0])
+        eval_e1 = 0.5 * np.mean(plot_dict['x_q21_0']) + 0.5 * np.mean(plot_dict['x_q31_0'])
+        eval_e3 = 0.5 * np.mean(plot_dict['x_q21_2']) + 0.5 * np.mean(plot_dict['x_q31_2'])
+        
     v_normal = [np.cos(elevation_opt), 0, np.sin(elevation_opt)]
     Roty = np.array([[np.cos(elevation_opt), 0, np.sin(elevation_opt)], 
                      [0, 1, 0], 
                      [-np.sin(elevation_opt), 0, np.cos(elevation_opt)]])
 
-    eval_e1 = 0.5 * np.mean(plot_dict['x_q21_0']) + 0.5 * np.mean(plot_dict['x_q31_0'])
-    eval_e3 = 0.5 * np.mean(plot_dict['x_q21_2']) + 0.5 * np.mean(plot_dict['x_q31_2'])
     eval_rot = np.dot(Roty, np.array([[eval_e1], [0], [eval_e3]])).squeeze()
 
-    lims = [[-300, 300], [-300, 300]]
+    lims = [[-frame_width, frame_width], [-frame_width, frame_width]]
     resolution = 3
     evaluation_points_e1 = np.linspace(lims[0][0], lims[0][1], resolution)
     evaluation_points_e2 = np.linspace(lims[1][0], lims[1][1], resolution)
@@ -60,12 +63,14 @@ def calculate_flowfield_parameters_kite_plane(file_path_awebox):
 
 
 
-def calculate_flowfield_parameters_xz(file_path_awebox, t_end, single_or_dual):
+def calculate_flowfield_parameters_xz(file_path_awebox, timestep, res, single_or_dual, y_position=0):
     '''
     Args:
         file_path_awebox (str) : file path to CSV file containing the output data from the awebox simulation
-        t_end (float) : end time of the simulation (to calculate how far the wake propagates)
+        timestep (int): the timestep at which you want to evaluate the flowfield parameters
+        res (int): resolution that you also used for the simulation
         single_or_dual (str): "single" for single wing, "dual" for dual wing configuration.
+        y_position (float): y position at which you want to evaluate the flowfield parameters. Default is 0.
     Returns: 
         The parameters that are neccesairy for the flowfield analysis. 
         min_xyz, max_xyz (str): the coordinates of the frame (in the format required by DUST)
@@ -75,11 +80,13 @@ def calculate_flowfield_parameters_xz(file_path_awebox, t_end, single_or_dual):
 
     df = pd.read_csv(file_path_awebox)
     d = 60 # some margin around the trajectory, change if neccesary 
+    dt = res * np.mean([df["time"][i+1] - df["time"][i] for i in range(len(df["time"])-1)])
+    time = timestep * dt
 
     if single_or_dual == "single":
         u_inf_max  = np.max(df["outputs_aerodynamics_u_infty1_0"])
 
-        x_max = round(df["x_q10_0"].max() + d + t_end * u_inf_max, 1)
+        x_max = round(df["x_q10_0"].max() + d + time * u_inf_max, 1)
         x_min = round(df["x_q10_0"].min() - d, 1)
 
         z_max = round(df["x_q10_2"].max() + d, 1)
@@ -88,15 +95,15 @@ def calculate_flowfield_parameters_xz(file_path_awebox, t_end, single_or_dual):
     elif single_or_dual == "dual":
         u_inf_max  = np.max(df["outputs_aerodynamics_u_infty2_0"])
 
-        x_max = round(max(df["x_q21_0"].max(), df["x_q31_0"].max()) + d + t_end * u_inf_max, 1)
+        x_max = round(max(df["x_q21_0"].max(), df["x_q31_0"].max()) + d + time * u_inf_max, 1)
         x_min = round(min(df["x_q21_0"].min(), df["x_q31_0"].min()) - d, 1)
 
         z_max = round(max(df["x_q21_2"].max(), df["x_q31_2"].max()) + d, 1)
         z_min = round(min(df["x_q21_2"].min(), df["x_q31_2"].min()) - d, 1)
 
     # only works for trajectories that rotate around the y-axis
-    min_xyz = f"(/{x_min}, {0}, {z_min}/)"
-    max_xyz = f"(/{x_max}, {0}, {z_max}/)"
+    min_xyz = f"(/{x_min}, {y_position}, {z_min}/)"
+    max_xyz = f"(/{x_max}, {y_position}, {z_max}/)"
 
 
     n_x = int((x_max - x_min) / 5)

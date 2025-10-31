@@ -35,7 +35,7 @@ def concatenate_data_periodic(n, data):
     if n == 1:
         return np.array(concatenated_data)
     else:
-        for i in range(1,n):
+        for _ in range(1,n):
             concatenated_data = np.concatenate((concatenated_data, data[1:]), axis=0)
 
         return np.array(concatenated_data)

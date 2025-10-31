@@ -1,0 +1,91 @@
+
+reference_tag = first_trajectory
+parent_tag = 0
+origin = (/286.22, -152.81, 483.92/)
+orientation = (/1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0/)
+multiple = F 
+moving = T
+motion = {
+pole = {
+input = position
+input_type = from_file
+file = first_wing_trajectory.dat
+}
+rotation = {
+input = position
+input_type = simple_function
+function = 0
+Axis = (/ 1.0 , 0.0 , 0.0 /)
+amplitude = 0.0
+}
+} 
+
+reference_tag = first_wing_euler_angle_Z1
+parent_tag = first_trajectory ! 0 : absolute reference frame
+origin = (/0.,0.,0./)
+orientation = (/1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0/)
+multiple = F 
+moving = T
+motion = {
+pole = {
+input = position
+input_type = simple_function
+function = (/ 0 , 0 , 0 /)
+amplitude = 0.00
+}
+rotation = {
+input = position
+input_type = from_file
+file = first_wing_euler_angle_Z1.dat
+Axis = (/ 0.0 , 0.0 , 1.0 /)
+}
+} 
+
+reference_tag = first_wing_euler_angle_X
+parent_tag = first_wing_euler_angle_Z1 ! 0 : absolute reference frame! 
+origin = (/0.,0.,0./)
+orientation = (/1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0/)
+multiple = F 
+moving = T
+motion = {
+pole = {
+input = position
+input_type = simple_function
+function = (/ 0 , 0 , 0 /)
+amplitude = 0.00
+}
+rotation = {
+input = position
+input_type = from_file
+file = first_wing_euler_angle_X.dat
+Axis = (/ 1.0 , 0.0 , 0.0 /)
+}
+} 
+
+reference_tag = first_wing_euler_angle_Z2
+parent_tag = first_wing_euler_angle_X ! 0 : absolute reference frame
+origin = (/0.,0.,0./)
+orientation = (/1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0/)
+multiple = F 
+moving = T
+motion = {
+pole = {
+input = position
+input_type = simple_function
+function = (/ 0 , 0 , 0 /)
+amplitude = 0.00
+}
+rotation = {
+input = position
+input_type = from_file
+file = first_wing_euler_angle_Z2.dat
+Axis = (/ 0.0 , 0.0 , 1.0 /)
+}
+} 
+
+reference_tag = first_wing
+parent_tag = first_wing_euler_angle_Z2 ! 0 : absolute reference frame
+origin = (/0.,0.,0./)
+orientation = (/1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0/)
+multiple = F 
+moving = F

@@ -1,0 +1,11 @@
+
+comp_name = first_wing
+geo_file = ParamWing.in
+ref_tag = first_wing
+
+comp_name = second_wing
+geo_file = ParamWing.in
+ref_tag = second_wing
+
+file_name = geo_input.h5 
+        

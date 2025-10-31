@@ -1,0 +1,42 @@
+
+basename = Postprocessing/post
+data_basename = Output/flapwing
+
+
+
+
+
+
+analysis = {
+  type = flow_field
+  name = heatmap_kite_plane
+
+  start_res = 70
+  end_res = 70
+  step_res = 1
+
+  format = vtk
+  average = F
+  
+  variable = Velocity
+  n_xyz = (/40, 40, 40/)
+  min_xyz = (/961.5, -300.0, 27.5/)
+  max_xyz = (/1134.2, 300.0, 602.1/)
+}
+
+analysis = {
+  type = flow_field
+  name = heatmap_xz
+
+  start_res = 70
+  end_res = 70
+  step_res = 1
+
+  format = vtk
+  average = F
+  
+  variable = Velocity
+  n_xyz = (/67, 1, 74/)
+  min_xyz = (/948.0, 0, 139.4/)
+  max_xyz = (/1283.4, 0, 510.1/)
+}

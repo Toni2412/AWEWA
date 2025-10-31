@@ -1,0 +1,32 @@
+
+
+    
+basename       = ./Output/flapwing
+
+! --- Time parameters ---
+tstart = 0.0
+tend = 80.74132604
+dt = 0.30015363
+dt_out = 0.30015363
+output_start = T
+! ndt_update_wake = 1
+
+! --- Restart ---
+restart_from_file = F
+
+! --- Geometry files ---
+geometry_file = geo_input.h5
+reference_file = References.in
+
+! --- stream parameters ---
+u_inf = (/ 13.002, 0.0, 0.0 /)
+rho_inf = 1.1849633191102371
+
+! wake parameters -------------
+n_wake_panels = 322
+
+! Model parameters -------------------
+fmm = F
+vortstretch = F
+diffusion = F
+

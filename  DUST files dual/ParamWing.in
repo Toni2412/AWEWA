@@ -1,0 +1,82 @@
+mesh_file_type = parametric
+el_type = v
+
+mesh_symmetry = T
+symmetry_point = (/0.0 ,0.0, 0.0/)
+symmetry_normal = (/0.0 , 1.0, 0.0/)
+
+starting_point = (/0.0,0.0,0.0/)
+
+nelem_chord = 3
+type_chord = uniform
+
+! section 1
+chord = 5.6952
+twist = 0.0 ! deg
+
+airfoil = NACA0012
+
+! region 1
+span = 4.473
+sweep = 0.0 ! deg
+dihed = 0.0 ! deg
+nelem_span = 4
+type_span = uniform
+
+! section 2
+chord = 5.58013
+twist = 0.0 ! deg
+
+airfoil = NACA0012
+
+! region 2
+span = 4.473
+sweep = 0.0 ! deg
+dihed = 0.0 ! deg
+nelem_span = 4
+type_span = uniform
+
+! section 3
+chord = 5.21974
+twist = 0.0 ! deg
+
+airfoil = NACA0012
+
+! region 3
+span = 4.473
+sweep = 0.0 ! deg
+dihed = 0.0 ! deg
+nelem_span = 4
+type_span = uniform
+
+! section 4
+chord = 4.55616
+twist = 0.0 ! deg
+
+airfoil = NACA0012
+
+! region 4
+span = 4.473
+sweep = 0.0 ! deg
+dihed = 0.0 ! deg
+nelem_span = 4
+type_span = uniform
+
+! section 5
+chord = 3.41712
+twist = 0.0 ! deg
+
+airfoil = NACA0012
+
+! region 5
+span = 4.473
+sweep = 0.0 ! deg
+dihed = 0.0 ! deg
+nelem_span = 4
+type_span = uniform
+
+! section 6.0
+chord = 1.0
+twist = 0.0 ! deg
+
+airfoil = NACA0012
