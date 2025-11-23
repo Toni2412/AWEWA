@@ -1,0 +1,45 @@
+
+basename = Postprocessing/post
+data_basename = Output/flapwing
+    
+    
+analysis = {
+  name = v1
+  type = Viz
+
+  format = vtk
+
+  start_res = 1
+  end_res = 72
+  step_res = 1
+  wake = T
+
+  variable = Vorticity
+
+}
+
+analysis = {
+
+type = integral_loads
+name = loads_first_wing
+start_res = 1
+end_res = 72
+step_res  = 1
+format   = dat
+
+component = first_wing 
+reference_tag = first_wing
+    }
+analysis = {
+
+type = integral_loads
+name = loads_second_wing
+start_res = 1
+end_res = 72
+step_res  = 1
+format   = dat
+
+component = second_wing 
+reference_tag = second_wing
+
+}

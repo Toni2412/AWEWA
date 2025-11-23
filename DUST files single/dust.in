@@ -5,9 +5,9 @@ basename       = ./Output/flapwing
 
 ! --- Time parameters ---
 tstart = 0.0
-tend = 80.74132604
-dt = 0.30015363
-dt_out = 0.30015363
+tend = 53.52739706
+dt = 0.50025605
+dt_out = 0.50025605
 output_start = T
 ! ndt_update_wake = 1
 
@@ -23,7 +23,7 @@ u_inf = (/ 13.002, 0.0, 0.0 /)
 rho_inf = 1.1849633191102371
 
 ! wake parameters -------------
-n_wake_panels = 322
+n_wake_panels = 128
 
 ! Model parameters -------------------
 fmm = F

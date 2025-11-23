@@ -17,7 +17,7 @@ def average_time_step(lst):
 
 
 
-def create_dust_files(n_rot, res, file_path_awebox, folder_path, single_or_dual, apply_pitch_correction, CL0, alpha_max, alpha_min, particles_or_panels, box_length):
+def create_dust_files(n_rot, res, file_path_awebox, folder_path, single_or_dual, apply_pitch_correction, CL0, alpha_max, alpha_min, particles_or_panels, box_length, dof):
 
     """
     Creates the .dat files for the trajectory and angles and modifies the DUST input files to fit the trajectory.
@@ -35,6 +35,7 @@ def create_dust_files(n_rot, res, file_path_awebox, folder_path, single_or_dual,
         alpha_min (float): Minimum angle of attack in degrees.(deduce from 3D lift curve)
         particles_or_panels (str): "particles" for particle-based simulation, "panels" for panel-based simulation.
         box_length (float): Length of one side of the cubic simulation box (only for particle-based simulation).
+        dof (int): either 6, if you did a "6 degrees of freedom" simulation in awebox or 3 for 3 degrees of freedom. 
     Returns:
         None, creates or modifies the necessary files in the specified folder.
     """
@@ -42,7 +43,7 @@ def create_dust_files(n_rot, res, file_path_awebox, folder_path, single_or_dual,
     # Process the AWEBOX file to extract necessary data
     u_inf, rho_inf, _, _, _ = process_file(file_path_awebox, single_or_dual, apply_pitch_correction, CL0, alpha_max, alpha_min)
     # concatenate the data for multiple rotations and apply the specified resolution
-    time_mult_rot, trajectories_mult_rot, _  = create_trajectory_and_orientation_files(single_or_dual, n_rot, res, file_path_awebox, folder_path, apply_pitch_correction, CL0, alpha_max, alpha_min)
+    time_mult_rot, trajectories_mult_rot, _  = create_trajectory_and_orientation_files(single_or_dual, n_rot, res, file_path_awebox, folder_path, apply_pitch_correction, CL0, alpha_max, alpha_min, dof)
 
     # Define the origins for the references.in file based on the first position of each trajectory
     origins = [f"(/{trajectory[0, 0]:.2f}, {trajectory[0, 1]:.2f}, {trajectory[0, 2]:.2f}/)" for trajectory in trajectories_mult_rot]

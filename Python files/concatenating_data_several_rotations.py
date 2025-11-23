@@ -4,10 +4,14 @@ from processing_awebox_file import process_file
 
 
 
-def compute_euler_angles(orientation):
+def compute_euler_angles(orientation, dof):
 
     R_matrix = np.array(orientation).reshape(3, 3)
-    euler_angles = R.from_matrix(R_matrix).as_euler('ZXZ')
+
+    if dof == 6: 
+        euler_angles = - (R.from_matrix(R_matrix).as_euler('zxz'))
+    elif dof == 3:
+        euler_angles = R.from_matrix(R_matrix).as_euler('ZXZ')
 
     return tuple(euler_angles)
 
@@ -58,7 +62,7 @@ def concatenate_data_semiperiodic(n, data_1, data_2):
 
 
 
-def create_trajectory_and_orientation_files(single_or_dual, n_rot, res, file_path, folder_path, apply_pitch_correction, CL0, alpha_max, alpha_min):
+def create_trajectory_and_orientation_files(single_or_dual, n_rot, res, file_path, folder_path, apply_pitch_correction, CL0, alpha_max, alpha_min, dof):
     """
     Create trajectory and orientation files for multiple rotations. Computes Euler angles from orientation matrices and saves the data to .dat files.
 
@@ -73,6 +77,7 @@ def create_trajectory_and_orientation_files(single_or_dual, n_rot, res, file_pat
         CL0 (float): Lift coefficient at zero angle of attack.(deduce from 3D drag curve)
         alpha_max (float): Maximum angle of attack in degrees.(deduce from 3D lift curve)
         alpha_min (float): Minimum angle of attack in degrees.(deduce from 3D lift curve)
+        dof (int): either 6, if you did a "6 degrees of freedom" simulation in awebox or 3 for 3 degrees of freedom. 
      
     Returns:
         saves the data to .dat files and returns the time, and lists containing the trajectories and Euler angles of the wing(s).
@@ -89,7 +94,7 @@ def create_trajectory_and_orientation_files(single_or_dual, n_rot, res, file_pat
         ll_names = ["first_wing"]
         trajectories_mult_rot.append(concatenate_data_periodic(n_rot, trajectories[0])[::res])
 
-        euler_angles = [compute_euler_angles(orientation) for orientation in orientations[0]]
+        euler_angles = [compute_euler_angles(orientation, dof) for orientation in orientations[0]]
 
         euler_angles_mult_rot = (concatenate_data_periodic(n_rot,euler_angles)[::res])
         euler_angles_mult_rot = [np.column_stack([np.unwrap(euler_angles_mult_rot[:, i]) for i in range(3)])]
@@ -99,8 +104,8 @@ def create_trajectory_and_orientation_files(single_or_dual, n_rot, res, file_pat
         ll_names = ["first_wing", "second_wing"]
         trajectories_mult_rot = [concatenate_data_semiperiodic(n_rot, trajectories[0], trajectories[1])[::res], concatenate_data_semiperiodic(n_rot, trajectories[1], trajectories[0])[::res]]
 
-        first_wing_euler_angles = [compute_euler_angles(orientation) for orientation in orientations[0]]
-        second_wing_euler_angles = [compute_euler_angles(orientation) for orientation in orientations[1]]
+        first_wing_euler_angles = [compute_euler_angles(orientation, dof) for orientation in orientations[0]]
+        second_wing_euler_angles = [compute_euler_angles(orientation, dof) for orientation in orientations[1]]
 
         first_wing_euler_angles_mult_rot = (concatenate_data_semiperiodic(n_rot, first_wing_euler_angles, second_wing_euler_angles)[::res])
         second_wing_euler_angles_mult_rot = (concatenate_data_semiperiodic(n_rot, second_wing_euler_angles, first_wing_euler_angles)[::res])
