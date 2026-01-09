@@ -76,7 +76,7 @@ nelem_span = 4
 type_span = uniform
 
 ! section 6.0
-chord = 1.0
+chord = 0.3
 twist = 0.0 ! deg
 
 airfoil = NACA0012
